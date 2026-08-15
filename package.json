@@ -1,5 +1,5 @@
 {
-  "name": "service-common",
+  "name": "@microservices/microservice-common",
   "version": "1.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -13,17 +13,13 @@
     "@grpc/grpc-js": "^1",
     "@nestjs/common": "^11",
     "@nestjs/microservices": "^11",
-    "@nestjs/typeorm": "^11",
-    "rxjs": "^7",
-    "typeorm": "^0.3"
+    "rxjs": "^7"
   },
   "devDependencies": {
     "@grpc/grpc-js": "^1.14.4",
     "@nestjs/common": "^11.2.1",
     "@nestjs/microservices": "^11.2.1",
-    "@nestjs/typeorm": "^11.0.3",
     "rxjs": "^7.8.2",
-    "typeorm": "^1.1.0",
     "typescript": "^7.0.2"
   }
 }
