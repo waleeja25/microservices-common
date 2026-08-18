@@ -3,11 +3,24 @@ import { RpcException } from '@nestjs/microservices';
 import { status as GrpcStatus } from '@grpc/grpc-js';
 import { Observable, throwError } from 'rxjs';
 
+import { DomainException } from '../exceptions';
 import { grpcError, GrpcErrorPayload } from './grpc-error';
 
 @Catch()
 export class GrpcExceptionFilter implements RpcExceptionFilter {
   catch(exception: unknown): Observable<never> {
+    if (exception instanceof DomainException) {
+      return throwError(() =>
+        grpcError(
+          exception.grpcStatus,
+          JSON.stringify({
+            code: exception.code,
+            message: exception.message,
+          }),
+        ),
+      );
+    }
+
     if (exception instanceof RpcException) {
       return throwError(() => this.fromRpcException(exception));
     }
