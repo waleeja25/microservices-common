@@ -4,3 +4,4 @@ export * from './src/filters';
 export * from './src/constants';
 export * from './src/pipes';
 export * from './src/validators';
+export * from './src/logger';

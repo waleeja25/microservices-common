@@ -1,4 +1,4 @@
-import { Catch, RpcExceptionFilter } from '@nestjs/common';
+import { Catch, Logger, RpcExceptionFilter } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { status as GrpcStatus } from '@grpc/grpc-js';
 import { Observable, throwError } from 'rxjs';
@@ -8,8 +8,12 @@ import { grpcError, GrpcErrorPayload } from './grpc-error';
 
 @Catch()
 export class GrpcExceptionFilter implements RpcExceptionFilter {
+  private readonly logger = new Logger(GrpcExceptionFilter.name);
+
   catch(exception: unknown): Observable<never> {
     if (exception instanceof DomainException) {
+      this.logger.warn(`${exception.code}: ${exception.message}`);
+
       return throwError(() =>
         grpcError(
           exception.grpcStatus,
@@ -22,8 +26,15 @@ export class GrpcExceptionFilter implements RpcExceptionFilter {
     }
 
     if (exception instanceof RpcException) {
+      this.logger.warn(exception.message);
+
       return throwError(() => this.fromRpcException(exception));
     }
+
+    this.logger.error(
+      'Unhandled exception',
+      exception instanceof Error ? exception.stack : String(exception),
+    );
 
     return throwError(() =>
       grpcError(GrpcStatus.INTERNAL, 'Internal server error'),
